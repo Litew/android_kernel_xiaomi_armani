@@ -3056,6 +3056,14 @@ config MSM_SECBOOT
 	bool "MSM Secboot verification driver"
 	help
 	Driver to expose secureboot status
+
+config XIAOMI_ARMANI_DTB
+	depends on ARCH_MSM8226
+	default n
+	bool "Xiaomi Armani Device DTBs"
+	help
+	 Only include Xiaomi Armani specific DTBs to limit the number that
+	 get built during kernel compilation.
 endif
 
 config KERNEL_TEXT_MPU_PROT
