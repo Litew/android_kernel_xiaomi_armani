@@ -668,6 +668,12 @@ do {									\
 	finish_wait(&wq, &__wait);					\
 } while (0)
 
+/* Backports tty_lock: Localise the lock */
+#define tty_lock(__tty) tty_lock()
+#define tty_unlock(__tty) tty_unlock()
+
+#define tty_port_register_device(port, driver, index, device) \
+	tty_register_device(driver, index, device)
 
 #endif /* __KERNEL__ */
 #endif

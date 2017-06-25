@@ -625,6 +625,15 @@ enum sock_flags {
 		     */
 };
 
+/*
+ * backport SOCK_SELECT_ERR_QUEUE -- see commit
+ * "net: add option to enable error queue packets waking select"
+ *
+ * Adding 14 to SOCK_QUEUE_SHRUNK will reach a bet that can't be
+ * set on older kernels, so sock_flag() will always return false.
+ */
+#define SOCK_SELECT_ERR_QUEUE (SOCK_QUEUE_SHRUNK + 14)
+
 static inline void sock_copy_flags(struct sock *nsk, struct sock *osk)
 {
 	nsk->sk_flags = osk->sk_flags;
