@@ -50,91 +50,38 @@
 			};
 		};
 
-		ft5x06_i2c@38 {
-			compatible = "ft,ft5x06_i2c";
+		focaltech@38 {
+			compatible = "focaltech,5x06";
 			reg = <0x38>;
 			interrupt-parent = <&msmgpio>;
 			interrupts = <17 0x2>;
 			vdd-supply = <&pm8226_l19>;
 			vcc_i2c-supply = <&pm8226_lvs1>;
-			ft5x06_i2c,i2c-pull-up;
-			ft5x06_i2c,irqflags = <0x2008>;
-			ft5x06_i2c,x-max = <720>;
-			ft5x06_i2c,y-max = <1280>;
-			ft5x06_i2c,z-max = <255>;
-			ft5x06_i2c,w-max = <200>;
-			ft5x06_i2c,irq-gpio = <&msmgpio 17 0x00>;
-			ft5x06_i2c,reset-gpio = <&msmgpio 16 0x00>;
-			ft5x06_i2c,landing-jiffies = <1000>;
-			ft5x06_i2c,landing-threshold = <16>;
-			ft5x06_i2c,staying-threshold = <8>;
-			ft5x06_i2c,raw-min = <7000>;
-			ft5x06_i2c,raw-max = <10000>;
-			ft5x06_i2c,firmware-array-size = <4>;
-			ft5x06_i2c,cfg_0 {
-				ft5x06_i2c,chip = <0x0A>;
-				ft5x06_i2c,vendor = <0x51>;
-				ft5x06_i2c,fw-name = "ft5316_firmware.fw";
-				ft5x06_i2c,key-menu = <155 1317 10 50>;
-				ft5x06_i2c,key-home = <355 1317 10 50>;
-				ft5x06_i2c,key-back = <565 1317 10 50>;
-				ft5x06_i2c,key-length = <3>;
-				ft5x06_i2c,key-map = <139 102 158>;
-				ft5x06_i2c,key-pos = <2 6 10>;
-				ft5x06_i2c,tx-num = <24>;
-				ft5x06_i2c,rx-num = <13>;
-			};
-			ft5x06_i2c,cfg_1 {
-				ft5x06_i2c,chip = <0x14>;
-				ft5x06_i2c,vendor = <0x51>;
-				ft5x06_i2c,fw-name = "ft5336_firmware_ofilm.fw";
-				ft5x06_i2c,key-menu = <155 1319 10 50>;
-				ft5x06_i2c,key-home = <355 1319 10 50>;
-				ft5x06_i2c,key-back = <565 1319 10 50>;
-				ft5x06_i2c,key-length = <3>;
-				ft5x06_i2c,key-map = <139 102 158>;
-				ft5x06_i2c,key-pos = <2 6 10>;
-				ft5x06_i2c,tx-num = <24>;
-				ft5x06_i2c,rx-num = <13>;
-			};
-			ft5x06_i2c,cfg_2 {
-				ft5x06_i2c,chip = <0x14>;
-				ft5x06_i2c,vendor = <0x89>;
-				ft5x06_i2c,fw-name = "ft5336_firmware_wintek.fw";
-				ft5x06_i2c,key-menu = <155 1319 10 50>;
-				ft5x06_i2c,key-home = <355 1319 10 50>;
-				ft5x06_i2c,key-back = <565 1319 10 50>;
-				ft5x06_i2c,key-length = <3>;
-				ft5x06_i2c,key-map = <139 102 158>;
-				ft5x06_i2c,key-pos = <2 6 10>;
-				ft5x06_i2c,tx-num = <24>;
-				ft5x06_i2c,rx-num = <13>;
-			};
-			ft5x06_i2c,cfg_3 {
-				ft5x06_i2c,chip = <0x14>;
-				ft5x06_i2c,vendor = <0x3B>;
-				ft5x06_i2c,fw-name = "ft5336_firmware_biel.fw";
-				ft5x06_i2c,key-menu = <155 1319 10 50>;
-				ft5x06_i2c,key-home = <355 1319 10 50>;
-				ft5x06_i2c,key-back = <565 1319 10 50>;
-				ft5x06_i2c,key-length = <3>;
-				ft5x06_i2c,key-map = <139 102 158>;
-				ft5x06_i2c,key-pos = <2 6 10>;
-				ft5x06_i2c,tx-num = <24>;
-				ft5x06_i2c,rx-num = <13>;
-			};
+			focaltech,name = "ft5336";
+			focaltech,panel-coords = <0 0 720 1280>;
+			focaltech,display-coords = <0 0 720 1280>;
+			focaltech,i2c-pull-up;
+			focaltech,no-force-update;
+			focaltech,reset-gpio = <&msmgpio 16 0x00>;
+			focaltech,irq-gpio = <&msmgpio 17 0x00>;
+			focaltech,fw-name = "ft5336_firmware_ofilm.fw";
+			focaltech,group-id = <1>;
+			focaltech,hard-reset-delay-ms = <20>;
+			focaltech,soft-reset-delay-ms = <300>;
+			focaltech,num-max-touches = <10>;
+			focaltech,fw-delay-aa-ms = <30>;
+			focaltech,fw-delay-55-ms = <30>;
+			focaltech,fw-upgrade-id1 = <0x71>;
+			focaltech,fw-upgrade-id2 = <0x11>;
+			focaltech,fw-delay-readid-ms = <10>;
+			focaltech,fw-delay-era-flsh-ms = <2000>;
+			focaltech,fw-auto-cal;
+			focaltech,fw-vkey-support;
+			focaltech,family-id = <0x14>;
+			focaltech,irqflags = <0x2008>;
+			focaltech,button-map= <139 102 158>;
+			focaltech,firmware-array-size = <4>;
 		};
-	};
-
-	gen-vkeys {
-		compatible = "qcom,gen-vkeys";
-		label = "ft5x06_ts";
-		qcom,disp-maxx = <1080>;
-		qcom,disp-maxy = <1920>;
-		qcom,panel-maxx = <1080>;
-		qcom,panel-maxy = <2080>;
-		qcom,key-codes = <139 102 158>;
-		qcom,y-offset = <0>;
 	};
 
 	gpio_keys {
