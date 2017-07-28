@@ -9615,7 +9615,7 @@ static void hdd_dp_util_send_rps_ind(hdd_context_t  *hdd_ctxt)
 }
 
 /*Added by Zhenglq for obtaining from NV*/
-#define WLAN_MAC_SHENQI_NV
+//#define WLAN_MAC_SHENQI_NV
 #ifdef WLAN_MAC_SHENQI_NV
 extern int wlan_get_nv_mac(char* buf);
 #endif 
