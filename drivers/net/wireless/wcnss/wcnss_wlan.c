@@ -386,6 +386,7 @@ static struct {
 	unsigned char   fw_minor;
 	unsigned int	serial_number;
 	int		thermal_mitigation;
+	int		wcnss_ready;
 	enum wcnss_hw_type	wcnss_hw_type;
 	void		(*tm_notify)(struct device *, int);
 	struct wcnss_wlan_config wlan_config;
@@ -572,6 +573,19 @@ void wcnss_riva_dump_pmic_regs(void)
 				wcnss_pmic_reg_dump[i].reg_addr, val);
 	}
 }
+
+static ssize_t wcnss_ready_show(struct device *dev,
+                                struct device_attribute *attr, char *buf)
+{
+	if (!penv)
+		return -ENODEV;
+
+	wcnss_device_ready();
+
+	return scnprintf(buf, PAGE_SIZE, "%i", penv->wcnss_ready);
+}
+
+static DEVICE_ATTR(wcnss_ready, S_IRUGO, wcnss_ready_show, NULL);
 
 /* wcnss_reset_intr() is invoked when host drivers fails to
  * communicate with WCNSS over SMD; so logging these registers
@@ -1006,8 +1020,14 @@ static int wcnss_create_sysfs(struct device *dev)
 	if (ret)
 		goto remove_version;
 
+	ret = device_create_file(dev, &dev_attr_wcnss_ready);
+	if (ret)
+		goto remove_macaddr;
+
 	return 0;
 
+remove_macaddr:
+	device_remove_file(dev, &dev_attr_wcnss_mac_addr);
 remove_version:
 	device_remove_file(dev, &dev_attr_wcnss_version);
 remove_thermal:
@@ -1025,6 +1045,7 @@ static void wcnss_remove_sysfs(struct device *dev)
 		device_remove_file(dev, &dev_attr_thermal_mitigation);
 		device_remove_file(dev, &dev_attr_wcnss_version);
 		device_remove_file(dev, &dev_attr_wcnss_mac_addr);
+		device_remove_file(dev, &dev_attr_wcnss_ready);
 	}
 }
 
@@ -1306,8 +1327,12 @@ EXPORT_SYMBOL(wcnss_is_hw_pronto_ver3);
 int wcnss_device_ready(void)
 {
 	if (penv && penv->pdev && penv->nv_downloaded &&
-	    !wcnss_device_is_shutdown())
-		return 1;
+	    !wcnss_device_is_shutdown()) {
+			penv->wcnss_ready = 1;
+			return 1;
+		}
+
+	penv->wcnss_ready = 0;
 	return 0;
 }
 EXPORT_SYMBOL(wcnss_device_ready);
