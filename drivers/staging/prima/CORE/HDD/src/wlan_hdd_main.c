@@ -9614,12 +9614,6 @@ static void hdd_dp_util_send_rps_ind(hdd_context_t  *hdd_ctxt)
    }
 }
 
-/*Added by Zhenglq for obtaining from NV*/
-//#define WLAN_MAC_SHENQI_NV
-#ifdef WLAN_MAC_SHENQI_NV
-extern int wlan_get_nv_mac(char* buf);
-#endif 
-
 /**---------------------------------------------------------------------------
 
   \brief hdd_wlan_startup() - HDD init function
@@ -9646,7 +9640,7 @@ int hdd_wlan_startup(struct device *dev )
 #endif
    int ret;
    struct wiphy *wiphy;
-   //v_MACADDR_t mac_addr;
+   v_MACADDR_t mac_addr;
 
    ENTER();
    /*
@@ -9965,7 +9959,6 @@ int hdd_wlan_startup(struct device *dev )
       hddLog(VOS_TRACE_LEVEL_FATAL,"%s: config update failed",__func__ );
       goto err_vosclose;
    }
-#if 0
    // Get mac addr from platform driver
    ret = wcnss_get_wlan_mac_address((char*)&mac_addr.bytes);
 
@@ -9991,75 +9984,6 @@ int hdd_wlan_startup(struct device *dev )
       }
    }
    else if (VOS_STATUS_SUCCESS != hdd_update_config_from_nv(pHddCtx))
-   {
-#endif
-#ifdef WLAN_MAC_SHENQI_NV
-    {
-        v_MACADDR_t nv_mac;
-        static const v_MACADDR_t zero_address =  {{0x00, 0x00, 0x00, 0x00, 0x00, 0x00}};
-        unsigned int serialno = 0;
-
-        memset(&nv_mac, 0, sizeof(v_MACADDR_t));
-
-        /* get mac from modem nv by smem */
-        wlan_get_nv_mac((char*)&nv_mac.bytes);
-        if(0 != memcmp(&zero_address, &nv_mac, sizeof(zero_address))) {
-            memcpy(&pHddCtx->cfg_ini->intfMacAddr[0].bytes, &nv_mac.bytes, sizeof(v_MACADDR_t));
-        }else{
-            /* from nv fail; use wcnss serial, next random */
-            serialno = wcnss_get_serial_number();
-            if(0 == serialno)
-                    serialno = random32();
-            pHddCtx->cfg_ini->intfMacAddr[0].bytes[0] = 0x80;
-            pHddCtx->cfg_ini->intfMacAddr[0].bytes[1] = 0xCF;
-            pHddCtx->cfg_ini->intfMacAddr[0].bytes[2] = 0x41;
-            pHddCtx->cfg_ini->intfMacAddr[0].bytes[3] = (serialno >> 16) & 0xFF;
-            pHddCtx->cfg_ini->intfMacAddr[0].bytes[4] = (serialno >> 8) & 0xFF;
-            pHddCtx->cfg_ini->intfMacAddr[0].bytes[5] = serialno & 0xFF;
-        }
-    }
-#else
-   // Apply the NV to cfg.dat
-   /* Prima Update MAC address only at here */
-   if (VOS_STATUS_SUCCESS != hdd_update_config_from_nv(pHddCtx))
-   {
-#ifdef WLAN_AUTOGEN_MACADDR_FEATURE
-      /* There was not a valid set of MAC Addresses in NV.  See if the
-         default addresses were modified by the cfg.ini settings.  If so,
-         we'll use them, but if not, we'll autogenerate a set of MAC
-         addresses based upon the device serial number */
-
-      static const v_MACADDR_t default_address =
-         {{0x00, 0x0A, 0xF5, 0x89, 0x89, 0xFF}};
-
-      if (0 == memcmp(&default_address, &pHddCtx->cfg_ini->intfMacAddr[0],
-                   sizeof(default_address)))
-      {
-         /* cfg.ini has the default address, invoke autogen logic */
-
-         /* Here, passing Arg2 as 0 because we want to change the
-            last 3 bytes (means non OUI bytes) of all the interfaces
-            mac addr.
-          */
-         if (0 != hdd_generate_iface_mac_addr_auto(pHddCtx, 0,
-                                                            default_address))
-         {
-            hddLog(VOS_TRACE_LEVEL_ERROR,
-                   "%s: Failed to generate wlan interface mac addr "
-                   "using MAC from ini file " MAC_ADDRESS_STR, __func__,
-                   MAC_ADDR_ARRAY(pHddCtx->cfg_ini->intfMacAddr[0].bytes));
-         }
-      }
-      else
-#endif //WLAN_AUTOGEN_MACADDR_FEATURE
-      {
-         hddLog(VOS_TRACE_LEVEL_ERROR,
-                "%s: Invalid MAC address in NV, using MAC from ini file "
-                MAC_ADDRESS_STR, __func__,
-                MAC_ADDR_ARRAY(pHddCtx->cfg_ini->intfMacAddr[0].bytes));
-      }
-   }
-#endif /*#ifdef WLAN_MAC_SHENQI_NV*/
    {
       eHalStatus halStatus;
 
