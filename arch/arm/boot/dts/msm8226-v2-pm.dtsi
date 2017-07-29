@@ -113,14 +113,14 @@
 		#address-cells = <1>;
 		#size-cells = <0>;
 
-		qcm,cpu-modes {
+		qcom,cpu-modes {
 			compatible = "qcom,cpu-modes";
 
 			qcom,cpu-modes@0 {
 				qcom,mode = "wfi";
 				qcom,latency-us = <1>;
 				qcom,ss-power = <530>;
-				qcom,energy-overhead = <52800>;
+				qcom,energy-overhead = <32800>;
 				qcom,time-overhead = <100>;
 			};
 
@@ -153,7 +153,6 @@
 				qcom,energy-overhead = <738750>;
 				qcom,time-overhead = <1410>;
 				qcom,min-cpu-mode= "standalone_pc";
-				qcom,sync-cpus;
 			};
 
 			qcom,system-modes@1 {
@@ -163,7 +162,6 @@
 				qcom,energy-overhead = <1027150>;
 				qcom,time-overhead = <2400>;
 				qcom,min-cpu-mode= "standalone_pc";
-				qcom,sync-cpus;
 			};
 
 			qcom,system-modes@2 {
@@ -173,7 +171,6 @@
 				qcom,energy-overhead = <1027150>;
 				qcom,time-overhead = <2400>;
 				qcom,min-cpu-mode= "pc";
-				qcom,sync-cpus;
 				qcom,send-rpm-sleep-set;
 			};
 		};
