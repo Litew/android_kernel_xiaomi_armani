@@ -277,4 +277,9 @@ static inline unsigned long compare_ether_header(const void *a, const void *b)
 #endif
 }
 
+static inline bool ether_addr_equal(const u8 *addr1, const u8 *addr2)
+{
+	return !compare_ether_addr(addr1, addr2);
+}
+
 #endif	/* _LINUX_ETHERDEVICE_H */
