@@ -26,8 +26,7 @@ fw-shipped- += acenic/tg1.bin
 else
 acenic-objs := acenic/tg1.bin acenic/tg2.bin
 endif
-fw-shipped-$(CONFIG_TOUCHSCREEN_FT5X06) += ft5316_firmware.fw \
-					   ft5336_firmware_ofilm.fw \
+fw-shipped-$(CONFIG_TOUCHSCREEN_FT5X06) += ft5336_firmware_ofilm.fw \
 					   ft5336_firmware_wintek.fw \
 					   ft5336_firmware_biel.fw \
 					   ft5336_firmware.fw
