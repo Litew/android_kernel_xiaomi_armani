@@ -43,171 +43,6 @@
 
 #define FT_DRIVER_VERSION	0x02
 
-#define FT_META_REGS		3
-#define FT_ONE_TCH_LEN		6
-#define FT_TCH_LEN(x)		(FT_META_REGS + FT_ONE_TCH_LEN * x)
-
-#define FT_PRESS		0x7F
-#define FT_MAX_ID		0x0F
-#define FT_TOUCH_X_H_POS	3
-#define FT_TOUCH_X_L_POS	4
-#define FT_TOUCH_Y_H_POS	5
-#define FT_TOUCH_Y_L_POS	6
-#define FT_TD_STATUS		2
-#define FT_TOUCH_EVENT_POS	3
-#define FT_TOUCH_ID_POS		5
-#define FT_TOUCH_DOWN		0
-#define FT_TOUCH_CONTACT	2
-
-/*register address*/
-#define FT_REG_DEV_MODE		0x00
-#define FT_DEV_MODE_REG_CAL	0x02
-#define FT_REG_ID		0xA3
-#define FT_REG_PMODE		0xA5
-#define FT_REG_FW_VER		0xA6
-#define FT_REG_POINT_RATE	0x88
-#define FT_REG_THGROUP		0x80
-#define FT_REG_ECC		0xCC
-#define FT_REG_RESET_FW		0x07
-#define FT_REG_FW_MIN_VER	0xB2
-#define FT_REG_FW_SUB_MIN_VER	0xB3
-
-/* power register bits*/
-#define FT_PMODE_ACTIVE		0x00
-#define FT_PMODE_MONITOR	0x01
-#define FT_PMODE_STANDBY	0x02
-#define FT_PMODE_HIBERNATE	0x03
-#define FT_FACTORYMODE_VALUE	0x40
-#define FT_WORKMODE_VALUE	0x00
-#define FT_RST_CMD_REG1		0xFC
-#define FT_RST_CMD_REG2		0xBC
-#define FT_READ_ID_REG		0x90
-#define FT_ERASE_APP_REG	0x61
-#define FT_ERASE_PANEL_REG	0x63
-#define FT_FW_START_REG		0xBF
-
-#define FT_STATUS_NUM_TP_MASK	0x0F
-
-#define FT_VTG_MIN_UV		2600000
-#define FT_VTG_MAX_UV		3300000
-#define FT_I2C_VTG_MIN_UV	1800000
-#define FT_I2C_VTG_MAX_UV	1800000
-
-#define FT_COORDS_ARR_SIZE	4
-#define MAX_BUTTONS		4
-
-#define FT_8BIT_SHIFT		8
-#define FT_4BIT_SHIFT		4
-#define FT_FW_NAME_MAX_LEN	50
-
-#define FT5316_ID		0x0A
-#define FT5X36_ID               0x14
-#define FT5306I_ID		0x55
-#define FT6X06_ID		0x06
-
-#define FT_UPGRADE_AA		0xAA
-#define FT_UPGRADE_55		0x55
-
-#define FT_FW_MIN_SIZE		8
-#define FT_FW_MAX_SIZE		32768
-
-/* Firmware file is not supporting minor and sub minor so use 0 */
-#define FT_FW_FILE_MAJ_VER(x)	((x)->data[(x)->size - 2])
-#define FT_FW_FILE_MIN_VER(x)	0
-#define FT_FW_FILE_SUB_MIN_VER(x) 0
-
-#define FT_FW_CHECK(x)		\
-	(((x)->data[(x)->size - 8] ^ (x)->data[(x)->size - 6]) == 0xFF \
-	&& (((x)->data[(x)->size - 7] ^ (x)->data[(x)->size - 5]) == 0xFF \
-	&& (((x)->data[(x)->size - 3] ^ (x)->data[(x)->size - 4]) == 0xFF)))
-
-#define FT_MAX_TRIES		5
-#define FT_RETRY_DLY		20
-
-#define FT_MAX_WR_BUF		10
-#define FT_MAX_RD_BUF		2
-#define FT_FW_PKT_LEN		128
-#define FT_FW_PKT_META_LEN	6
-#define FT_FW_PKT_DLY_MS	20
-#define FT_FW_LAST_PKT		0x6ffa
-#define FT_EARSE_DLY_MS		100
-#define FT_55_AA_DLY_NS		5000
-
-#define FT_UPGRADE_LOOP		30
-#define FT_CAL_START		0x04
-#define FT_CAL_FIN		0x00
-#define FT_CAL_STORE		0x05
-#define FT_CAL_RETRY		100
-#define FT_REG_CAL		0x00
-#define FT_CAL_MASK		0x70
-
-#define FT_INFO_MAX_LEN		512
-
-#define FT_BLOADER_SIZE_OFF	12
-#define FT_BLOADER_NEW_SIZE	30
-#define FT_DATA_LEN_OFF_OLD_FW	8
-#define FT_DATA_LEN_OFF_NEW_FW	14
-#define FT_FINISHING_PKT_LEN_OLD_FW	6
-#define FT_FINISHING_PKT_LEN_NEW_FW	12
-#define FT_MAGIC_BLOADER_Z7	0x7bfa
-#define FT_MAGIC_BLOADER_LZ4	0x6ffa
-#define FT_MAGIC_BLOADER_GZF_30	0x7ff4
-#define FT_MAGIC_BLOADER_GZF	0x7bf4
-
-enum {
-	FT_BLOADER_VERSION_LZ4 = 0,
-	FT_BLOADER_VERSION_Z7 = 1,
-	FT_BLOADER_VERSION_GZF = 2,
-};
-
-enum {
-	FT_FT5336_FAMILY_ID_0x11 = 0x11,
-	FT_FT5336_FAMILY_ID_0x12 = 0x12,
-	FT_FT5336_FAMILY_ID_0x13 = 0x13,
-	FT_FT5336_FAMILY_ID_0x14 = 0x14,
-};
-
-#define FT_STORE_TS_INFO(buf, id, name, max_tch, group_id, fw_vkey_support, \
-			fw_name, fw_maj, fw_min, fw_sub_min) \
-			snprintf(buf, FT_INFO_MAX_LEN, \
-				"controller\t= focaltech\n" \
-				"model\t\t= 0x%x\n" \
-				"name\t\t= %s\n" \
-				"max_touches\t= %d\n" \
-				"drv_ver\t\t= 0x%x\n" \
-				"group_id\t= 0x%x\n" \
-				"fw_vkey_support\t= %s\n" \
-				"fw_name\t\t= %s\n" \
-				"fw_ver\t\t= %d.%d.%d\n", id, name, \
-				max_tch, FT_DRIVER_VERSION, group_id, \
-				fw_vkey_support, fw_name, fw_maj, fw_min, \
-				fw_sub_min)
-
-#define FT_DEBUG_DIR_NAME	"ts_debug"
-
-struct ft5x06_ts_data {
-	struct i2c_client *client;
-	struct input_dev *input_dev;
-	const struct ft5x06_ts_platform_data *pdata;
-	struct regulator *vdd;
-	struct regulator *vcc_i2c;
-	char fw_name[FT_FW_NAME_MAX_LEN];
-	bool loading_fw;
-	u8 family_id;
-	struct dentry *dir;
-	u16 addr;
-	bool suspended;
-	char *ts_info;
-	u8 *tch_data;
-	u32 tch_data_len;
-	u8 fw_ver[3];
-#if defined(CONFIG_FB)
-	struct notifier_block fb_notif;
-#elif defined(CONFIG_HAS_EARLYSUSPEND)
-	struct early_suspend early_suspend;
-#endif
-};
-
 static int ft5x06_i2c_read(struct i2c_client *client, char *writebuf,
 			   int writelen, char *readbuf, int readlen)
 {
@@ -932,7 +767,7 @@ static int ft5x06_fw_upgrade(struct device *dev, bool force)
 	FT_STORE_TS_INFO(data->ts_info, data->family_id, data->pdata->name,
 			data->pdata->num_max_touches, data->pdata->group_id,
 			data->pdata->fw_vkey_support ? "yes" : "no",
-			data->pdata->fw_name, data->fw_ver[0],
+			data->fw_name, data->fw_ver[0],
 			data->fw_ver[1], data->fw_ver[2]);
 rel_fw:
 	release_firmware(fw);
@@ -1214,8 +1049,10 @@ static int ft5x06_get_dt_coords(struct device *dev, char *name,
 static int ft5x06_parse_dt(struct device *dev,
 			struct ft5x06_ts_platform_data *pdata)
 {
+	int i = 0;
 	int rc;
 	struct device_node *np = dev->of_node;
+	struct device_node *sub_np;
 	struct property *prop;
 	u32 temp_val, num_buttons;
 	u32 button_map[MAX_BUTTONS];
@@ -1250,13 +1087,6 @@ static int ft5x06_parse_dt(struct device *dev,
 				0, &pdata->irq_gpio_flags);
 	if (pdata->irq_gpio < 0)
 		return pdata->irq_gpio;
-
-	pdata->fw_name = "ft_fw.bin";
-	rc = of_property_read_string(np, "focaltech,fw-name", &pdata->fw_name);
-	if (rc && (rc != -EINVAL)) {
-		dev_err(dev, "Unable to read fw name\n");
-		return rc;
-	}
 
 	rc = of_property_read_u32(np, "focaltech,group-id", &temp_val);
 	if (!rc)
@@ -1337,12 +1167,6 @@ static int ft5x06_parse_dt(struct device *dev,
 	pdata->ignore_id_check = of_property_read_bool(np,
 						"focaltech,ignore-id-check");
 
-	rc = of_property_read_u32(np, "focaltech,family-id", &temp_val);
-	if (!rc)
-		pdata->family_id = temp_val;
-	else
-		return rc;
-
 	prop = of_find_property(np, "focaltech,button-map", NULL);
 	if (prop) {
 		num_buttons = prop->length / sizeof(temp_val);
@@ -1356,6 +1180,40 @@ static int ft5x06_parse_dt(struct device *dev,
 			dev_err(dev, "Unable to read key codes\n");
 			return rc;
 		}
+	}
+
+	rc = of_property_read_u32(np, "focaltech,firmware-array-size", &temp_val);
+	if (rc && (rc != -EINVAL)) {
+		dev_err(dev, "Unable to read firmware-array-size\n");
+		return rc;
+	}
+	pdata->firmware = kmalloc(sizeof(struct firmware_platform_data) * (temp_val + 1),
+				GFP_KERNEL);
+
+	pdata->cfg_size = temp_val;
+
+	for_each_child_of_node(np, sub_np) {
+		rc = of_property_read_u32(sub_np, "focaltech,family-id", &temp_val);
+		if (rc && (rc != -EINVAL)) {
+			dev_err(dev, "Unable to read chip id\n");
+			return rc;
+		} else
+			pdata->firmware[i].family_id = (u8)temp_val;
+
+		rc = of_property_read_u32(sub_np, "focaltech,vendor-id", &temp_val);
+		if (rc && (rc != -EINVAL)) {
+			dev_err(dev, "Unable to read vendor id\n");
+			return rc;
+		} else
+			pdata->firmware[i].vendor_id = (u8)temp_val;
+
+		rc = of_property_read_string(sub_np, "focaltech,fw-name",
+						&pdata->firmware[i].fw_name);
+		if (rc && (rc != -EINVAL)) {
+			dev_err(dev, "Unable to read fw-name\n");
+			return rc;
+		}
+		i++;
 	}
 
 	return 0;
@@ -1373,10 +1231,12 @@ static int ft5x06_ts_probe(struct i2c_client *client,
 {
 	struct ft5x06_ts_platform_data *pdata;
 	struct ft5x06_ts_data *data;
+	struct firmware_platform_data *firmware;
 	struct input_dev *input_dev;
 	struct dentry *temp;
 	u8 reg_value;
 	u8 reg_addr;
+	int i;
 	int err, len;
 
 	if (client->dev.of_node) {
@@ -1410,16 +1270,6 @@ static int ft5x06_ts_probe(struct i2c_client *client,
 	if (!data) {
 		dev_err(&client->dev, "Not enough memory\n");
 		return -ENOMEM;
-	}
-
-	if (pdata->fw_name) {
-		len = strlen(pdata->fw_name);
-		if (len > FT_FW_NAME_MAX_LEN - 1) {
-			dev_err(&client->dev, "Invalid firmware name\n");
-			return -EINVAL;
-		}
-
-		strlcpy(data->fw_name, pdata->fw_name, len + 1);
 	}
 
 	data->tch_data_len = FT_TCH_LEN(pdata->num_max_touches);
@@ -1526,22 +1376,53 @@ static int ft5x06_ts_probe(struct i2c_client *client,
 	/* make sure CTP already finish startup process */
 	msleep(data->pdata->soft_rst_dly);
 
-	/* check the controller id */
+	/* check the controller family id */
 	reg_addr = FT_REG_ID;
-	err = ft5x06_i2c_read(client, &reg_addr, 1, &reg_value, 1);
+	err = ft5x06_i2c_read(client, &reg_addr, 1, &data->family_id, 1);
 	if (err < 0) {
-		dev_err(&client->dev, "version read failed");
+		dev_err(&client->dev, "family-id read failed");
 		goto free_reset_gpio;
 	}
 
-	dev_info(&client->dev, "Device ID = 0x%x\n", reg_value);
+	dev_info(&client->dev, "family-id = 0x%x\n", data->family_id);
 
-	if ((pdata->family_id != reg_value) && (!pdata->ignore_id_check)) {
-		dev_err(&client->dev, "%s:Unsupported controller\n", __func__);
+	/* check the controller vendor id */
+	reg_addr = FT_REG_ID_VENDOR;
+	err = ft5x06_i2c_read(client, &reg_addr, 1, &data->vendor_id, 1);
+	if (err < 0) {
+		dev_err(&client->dev, "vendor-id read failed");
 		goto free_reset_gpio;
 	}
 
-	data->family_id = pdata->family_id;
+	dev_info(&client->dev, "vendor-id = 0x%x\n", data->vendor_id);
+
+	firmware = pdata->firmware;
+	for (i = 0; i < pdata->cfg_size; i++, firmware++) {
+		if (data->vendor_id == firmware->vendor_id) {
+			if(data->family_id == firmware->family_id) {
+				data->cfg_index = i;
+				break;
+			}
+			else
+				continue;
+		}
+	}
+
+	if (i == pdata->cfg_size) {
+		dev_err(&client->dev,
+			"Can't find firmware for current vendor and family id!\n");
+		goto free_reset_gpio;
+	}
+
+	if (firmware[data->cfg_index].fw_name) {
+		len = strlen(firmware[data->cfg_index].fw_name);
+		if (len > FT_FW_NAME_MAX_LEN - 1) {
+			dev_err(&client->dev, "Invalid firmware name\n");
+			goto free_reset_gpio;
+		}
+
+		strlcpy(data->fw_name, firmware[data->cfg_index].fw_name, len + 1);
+	}
 
 	err = request_threaded_irq(client->irq, NULL,
 				ft5x06_ts_interrupt,
@@ -1636,7 +1517,7 @@ static int ft5x06_ts_probe(struct i2c_client *client,
 	FT_STORE_TS_INFO(data->ts_info, data->family_id, data->pdata->name,
 			data->pdata->num_max_touches, data->pdata->group_id,
 			data->pdata->fw_vkey_support ? "yes" : "no",
-			data->pdata->fw_name, data->fw_ver[0],
+			data->fw_name, data->fw_ver[0],
 			data->fw_ver[1], data->fw_ver[2]);
 
 #if defined(CONFIG_FB)

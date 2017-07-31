@@ -64,7 +64,6 @@
 			focaltech,no-force-update;
 			focaltech,reset-gpio = <&msmgpio 16 0x00>;
 			focaltech,irq-gpio = <&msmgpio 17 0x00>;
-			focaltech,fw-name = "ft5336_firmware_ofilm.fw";
 			focaltech,group-id = <1>;
 			focaltech,hard-reset-delay-ms = <20>;
 			focaltech,soft-reset-delay-ms = <300>;
@@ -77,10 +76,24 @@
 			focaltech,fw-delay-era-flsh-ms = <2000>;
 			focaltech,fw-auto-cal;
 			focaltech,fw-vkey-support;
-			focaltech,family-id = <0x14>;
 			focaltech,irqflags = <0x2008>;
 			focaltech,button-map= <139 102 158>;
-			focaltech,firmware-array-size = <4>;
+			focaltech,firmware-array-size = <3>;
+			focaltech,cfg0 {
+				focaltech,family-id = <0x14>;
+				focaltech,vendor-id = <0x51>;
+				focaltech,fw-name = "ft5336_firmware_ofilm.fw";
+			};
+			focaltech,cfg1 {
+				focaltech,family-id = <0x14>;
+				focaltech,vendor-id = <0x89>;
+				focaltech,fw-name = "ft5336_firmware_wintek.fw";
+			};
+			focaltech,cfg2 {
+				focaltech,family-id = <0x14>;
+				focaltech,vendor-id = <0x3B>;
+				focaltech,fw-name = "ft5336_firmware_biel.fw";
+			};
 		};
 	};
 
