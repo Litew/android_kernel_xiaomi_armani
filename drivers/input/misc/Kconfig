@@ -431,6 +431,18 @@ config INPUT_GPIO
 	help
 	  Say Y here if you want to support gpio based keys, wheels etc...
 
+config INPUT_ISA1000_FF_MEMLESS
+        tristate "ISA1000 haptic ff-memless support"
+        depends on GPIO_MSM_V3
+        select INPUT_FF_MEMLESS
+        help
+          ISA1000 is a high performance enhanced haptic chip.   
+          Say Y here if you want to support ISA1000 connected via GPIO,
+          and select N if you are unsure.
+
+          To compile this driver as a module, choose M here: the
+          module will be called isa1000-ff-memless.
+
 config INPUT_ISA1200_FF_MEMLESS
 	tristate "ISA1200 haptic ff-memless support"
 	depends on I2C
