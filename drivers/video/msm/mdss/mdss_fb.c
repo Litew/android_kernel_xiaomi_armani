@@ -1020,7 +1020,7 @@ static int mdss_fb_blank_sub(int blank_mode, struct fb_info *info,
 		}
 
 		mutex_lock(&mfd->bl_lock);
-		if (!mfd->bl_updated) {
+		if (!mfd->bl_updated && !mfd->panel_info->cont_splash_enabled) {
 			mfd->bl_updated = 1;
 			mdss_fb_set_backlight(mfd, mfd->bl_level_prev_scaled);
 		}
