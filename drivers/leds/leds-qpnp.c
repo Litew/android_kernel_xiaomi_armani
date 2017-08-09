@@ -2388,14 +2388,14 @@ restore:
 }
 
 static void led_blink(struct qpnp_led_data *led,
-			struct pwm_config_data *pwm_cfg)
+			struct pwm_config_data *pwm_cfg, int do_blink)
 {
 	int rc;
 
 	flush_work(&led->work);
 	mutex_lock(&led->lock);
 	if (pwm_cfg->use_blink) {
-		if (led->cdev.brightness) {
+		if (do_blink) {
 			pwm_cfg->blinking = true;
 			if (led->id == QPNP_ID_LED_MPP)
 				led->mpp_cfg->pwm_mode = LPG_MODE;
@@ -2447,19 +2447,18 @@ static ssize_t blink_store(struct device *dev,
 	if (ret)
 		return ret;
 	led = container_of(led_cdev, struct qpnp_led_data, cdev);
-	led->cdev.brightness = blinking ? led->cdev.max_brightness : 0;
 
 	switch (led->id) {
 	case QPNP_ID_LED_MPP:
-		led_blink(led, led->mpp_cfg->pwm_cfg);
+		led_blink(led, led->mpp_cfg->pwm_cfg, (int) blinking);
 		break;
 	case QPNP_ID_RGB_RED:
 	case QPNP_ID_RGB_GREEN:
 	case QPNP_ID_RGB_BLUE:
-		led_blink(led, led->rgb_cfg->pwm_cfg);
+		led_blink(led, led->rgb_cfg->pwm_cfg, (int) blinking);
 		break;
 	case QPNP_ID_KPDBL:
-		led_blink(led, led->kpdbl_cfg->pwm_cfg);
+		led_blink(led, led->kpdbl_cfg->pwm_cfg, (int) blinking);
 		break;
 	default:
 		dev_err(&led->spmi_dev->dev, "Invalid LED id type for blink\n");
